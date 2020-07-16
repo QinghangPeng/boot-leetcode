@@ -1,5 +1,8 @@
 package com.boot.leetcode;
 
+import java.util.List;
+import java.util.Stack;
+
 /**
  * @ClassName: _2AddTwoNumbers
  * @Description:
@@ -81,12 +84,74 @@ public class _2AddTwoNumbers {
         ListNode result = new ListNode(0);
         ListNode temp = result;
         int carry = 0;
-        //利用栈先进后出的原理，将顺向链表组装成逆向链表
+        //利用栈先进后出的原理，将顺向链表组装成栈
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
+        while (l1 != null || l2 != null) {
+            if (l1 != null) {
+                s1.push(l1.val);
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                s2.push(l2.val);
+                l2 = l2.next;
+            }
+        }
+
+        while (!s1.empty() || !s2.empty()) {
+            int x = !s1.empty() ? s1.pop() : 0;
+            int y = !s2.empty() ? s2.pop() : 0;
+            int sum = x + y + carry;
+            carry = sum / 10;
+            //利用头插法，将结果按照从高位到地位顺序插入
+            ListNode node = new ListNode(sum % 10);
+            node.next = temp.next;
+            temp.next = node;
+        }
+
+        if (carry > 0) {
+            ListNode node = new ListNode(carry);
+            node.next = temp.next;
+            temp.next = node;
+        }
 
         return result.next;
     }
 
+    public static ListNode buildListNode(int[] nums) {
+        ListNode node = new ListNode(0);
+        ListNode temp = node;
+        for (int num : nums) {
+            temp.next = new ListNode(num);
+            temp = temp.next;
+        }
+        return node.next;
+    }
+
     public static void main(String[] args) {
+        int[] nums1 = new int[] {2,4,3};
+        int[] nums2 = new int[] {5,6,4};
+        int[] nums3 = new int[] {3,4,2};
+        int[] nums4 = new int[] {4,6,5};
+        ListNode node1 = buildListNode(nums1);
+        ListNode node2 = buildListNode(nums2);
+        ListNode node3 = buildListNode(nums3);
+        ListNode node4 = buildListNode(nums4);
+
+        ListNode listNode = addTwoNumbersReverse(node1, node2);
+        ListNode listNode1 = addTwoNumbersForward(node3, node4);
+
+        System.out.println("逆序打印==============");
+        while (listNode != null) {
+            System.out.println(listNode.val);
+            listNode = listNode.next;
+        }
+
+        System.out.println("顺序打印==============");
+        while (listNode1 != null) {
+            System.out.println(listNode1.val);
+            listNode1 = listNode1.next;
+        }
 
     }
 }
