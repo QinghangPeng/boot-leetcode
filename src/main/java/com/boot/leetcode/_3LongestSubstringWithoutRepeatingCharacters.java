@@ -69,6 +69,26 @@ public class _3LongestSubstringWithoutRepeatingCharacters {
         return longLength;
     }
 
+    /**
+     *  另一种方法
+     * @param str
+     * @return
+     */
+    public static int longLength(String str) {
+        int n = str.length();
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            int rk = i;
+            Set<Character> set = new HashSet<>();
+            while (rk < n && !set.contains(str.charAt(rk))) {
+                set.add(str.charAt(rk));
+                rk++;
+            }
+            ans = Math.max(ans,rk - i);
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
         String str = "abcabcbb";
         Integer ans = longswrc(str);
